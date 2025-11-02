@@ -1,7 +1,39 @@
+"use client"
+
 import { Linkedin, Copy, ArrowLeft } from "lucide-react"
 import Link from "next/link"
+import { useAuth } from "@/hooks/use-auth"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 export default function ProfileAnalyzer() {
+  const { user, loading } = useAuth()
+  const router = useRouter()
+
+  // Protect the route
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login')
+    }
+  }, [user, loading, router])
+
+  // Show loading while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-linear-to-b from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mx-auto mb-4" />
+          <p className="text-white">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Don't render if not authenticated
+  if (!user) {
+    return null
+  }
+
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-900 via-blue-900 to-slate-900">
       {/* Navigation */}

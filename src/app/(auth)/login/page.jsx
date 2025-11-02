@@ -3,21 +3,17 @@
 
 import { Linkedin } from "lucide-react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { useAuth } from "@/hooks/use-auth"
 
 export default function LoginPage() {
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const { signInWithLinkedIn } = useAuth()
 
   const handleLinkedInLogin = async () => {
     setIsLoading(true)
     try {
-      // Simulate OAuth flow - in production, this would redirect to LinkedIn OAuth
-      // For now, we'll store a mock token and redirect to dashboard
-      localStorage.setItem("linkedinToken", "mock_token_" + Date.now())
-      localStorage.setItem("isAuthenticated", "true")
-      router.push("/dashboard")
+      await signInWithLinkedIn()
     } catch (error) {
       console.error("Login failed:", error)
       setIsLoading(false)
@@ -64,28 +60,6 @@ export default function LoginPage() {
               <Linkedin className="w-5 h-5" />
               {isLoading ? "Connecting..." : "Sign in with LinkedIn"}
             </button>
-
-            {/* Divider */}
-            <div className="relative mb-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-700" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-slate-800/50 text-slate-400">or</span>
-              </div>
-            </div>
-
-            {/* Email Login (Optional) */}
-            <div className="space-y-3 mb-6">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-              />
-              <button className="w-full bg-slate-700 hover:bg-slate-600 text-white font-semibold py-3 rounded-lg transition">
-                Continue with Email
-              </button>
-            </div>
 
             {/* Footer */}
             <p className="text-center text-slate-400 text-sm">
